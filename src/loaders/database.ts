@@ -1,14 +1,21 @@
-import { Sequelize } from 'sequelize-typescript';
+import { ModelCtor, Sequelize } from 'sequelize-typescript';
 import { env } from 'src/config/env';
 
-const { MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD } = env;
+const {
+  MYSQL_HOST,
+  MYSQL_PORT,
+  MYSQL_DATABASE,
+  MYSQL_USER,
+  MYSQL_PASSWORD,
+  MYSQL_SYNC,
+} = env;
 
 export interface InitializeSequelizeOptions {
-  sync?: boolean;
+  models: string[] | ModelCtor[];
 }
 
-export const initializeSequelize = async (opts: InitializeSequelizeOptions = {}) => {
-  const { sync } = opts;
+export const initializeSequelize = async (opts: InitializeSequelizeOptions) => {
+  const { models } = opts;
 
   const sequelize = new Sequelize({
     host: MYSQL_HOST,
@@ -17,10 +24,10 @@ export const initializeSequelize = async (opts: InitializeSequelizeOptions = {})
     dialect: 'mysql',
     username: MYSQL_USER,
     password: MYSQL_PASSWORD,
-    models: ['src/models/**/*'],
+    models: models,
   });
 
-  if (sync) {
+  if (MYSQL_SYNC) {
     await sequelize.sync();
   }
 
