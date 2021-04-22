@@ -1,17 +1,18 @@
 import { env } from 'src/config/env';
 import express from 'express';
+import { loadModules } from './loaders';
 
-const server = express();
+(async () => {
+  const server = express();
+  
+  await loadModules();
 
-server.get('/', (req, res) => {
-  res.send('Hello World');
-});
-
-server.listen(env.PORT, () => {
-  console.log(`
+  server.listen(env.PORT, () => {
+    console.log(`
 __________________________________________
     
     Server listening on port: ${env.PORT}
 __________________________________________
     `);
-});
+  });
+})();

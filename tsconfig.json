@@ -3,16 +3,20 @@
     "baseUrl": ".",
     "outDir": "./dist",
     "rootDir": "./",
-    "target": "ES2015",
+    "target": "es2019",
     "module": "commonjs",
-    "lib": ["ES2015"],
+    "lib": ["dom", "es2019", "esnext.asynciterable"],
     "sourceMap": true,
     "inlineSources": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "strictNullChecks": true,
     "esModuleInterop": true,
-    "allowJs": true
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "src/*": ["src/*"]
+    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"]

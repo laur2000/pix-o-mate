@@ -4,7 +4,7 @@
   "description": "A very cool backend for kittens",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/src/main.js",
+    "start": "node -r ts-node/register/transpile-only -r tsconfig-paths/register dist/src/main.js",
     "dev": "ts-node-dev --project ./tsconfig.json --no-notify --respawn -r tsconfig-paths/register src/main.ts"
   },
   "repository": {
@@ -29,6 +29,8 @@
   },
   "dependencies": {
     "express": "^4.17.1",
+    "mysql2": "^2.2.5",
+    "reflect-metadata": "^0.1.13",
     "sequelize": "^6.6.2",
     "sequelize-typescript": "^2.1.0"
   }
