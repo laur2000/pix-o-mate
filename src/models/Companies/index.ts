@@ -7,12 +7,16 @@ import {
   IsEmail,
   DataType,
   Model,
+  AutoIncrement,
 } from 'sequelize-typescript';
 
+import { readFileSync } from 'fs';
+
 @Table
-class Companies extends Model {
+class Companies extends Model<ICompany, Omit<ICompany, 'id'>> {
   @PrimaryKey
-  @Column({ type: DataType.INTEGER})
+  @AutoIncrement
+  @Column({ type: DataType.INTEGER })
   public id: number;
 
   @NotNull
@@ -63,4 +67,20 @@ export enum CompanyStatus {
   Closed = 'Closed',
 }
 
+export interface ICompany {
+  id: number;
+  name: string;
+  CIF: string;
+  shortdesc: string;
+  description: string;
+  address: string;
+  email: string;
+  CCC: string;
+  date: Date;
+  status: CompanyStatus;
+  logo: string;
+}
+
 export default Companies;
+
+export const companyTriggers = readFileSync('src/models/Companies/triggers.sql').toString();

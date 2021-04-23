@@ -1,3 +1,5 @@
-import Companies from './Companies';
+import Companies, {companyTriggers} from './Companies';
 
-export default [Companies];
+export const models = [Companies];
+
+export const triggers = [companyTriggers];
