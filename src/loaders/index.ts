@@ -1,9 +1,9 @@
 import { initializeSequelize } from './database';
-import {models, triggers} from 'src/models';
+import { models, commands } from 'src/models';
 
 export const loadModules = async () => {
   await initializeSequelize({
     models,
-    triggers
+    commands,
   });
 };

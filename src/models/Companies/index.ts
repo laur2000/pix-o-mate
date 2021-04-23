@@ -9,8 +9,19 @@ import {
   Model,
   AutoIncrement,
 } from 'sequelize-typescript';
+import {
+  CREATE_BEFORE_INSERT_CIF_TRIGGER,
+  CREATE_BEFORE_UPDATE_CIF_TRIGGER,
+  CREATE_CHECK_CIF_VALIDITY,
+  DROP_BEFORE_INSERT_CIF_TRIGGER,
+  DROP_BEFORE_UPDATE_CIF_TRIGGER,
+  DROP_CHECK_CIF_VALIDITY,
+} from 'src/models/Companies/sql';
 
-import { readFileSync } from 'fs';
+export enum CompanyStatus {
+  OPEN = 'OPEN',
+  CLOSED = 'CLOSED',
+}
 
 @Table
 class Companies extends Model<ICompany, Omit<ICompany, 'id'>> {
@@ -24,7 +35,7 @@ class Companies extends Model<ICompany, Omit<ICompany, 'id'>> {
   public name: string;
 
   @NotNull
-  @Column({ type: DataType.STRING(9), unique: true, allowNull: false })
+  @Column({ type: DataType.CHAR(9), unique: true, allowNull: false })
   public CIF: string;
 
   @NotNull
@@ -33,20 +44,20 @@ class Companies extends Model<ICompany, Omit<ICompany, 'id'>> {
   public shortdesc: string;
 
   @NotNull
-  @Column({ type: DataType.TEXT, allowNull: false })
+  @Column({ type: DataType.STRING(1000), allowNull: false })
   public description: string;
 
   @NotNull
-  @Column({ type: DataType.TEXT, allowNull: false })
+  @Column({ type: DataType.STRING(100), allowNull: false })
   public address: string;
 
   @NotNull
   @IsEmail
-  @Column({ type: DataType.TEXT, allowNull: false })
+  @Column({ type: DataType.STRING(100), allowNull: false })
   public email: string;
 
   @NotNull
-  @Column({ type: DataType.TEXT, allowNull: false })
+  @Column({ type: DataType.CHAR(20), allowNull: false })
   public CCC: string;
 
   @NotNull
@@ -54,17 +65,12 @@ class Companies extends Model<ICompany, Omit<ICompany, 'id'>> {
   public date: Date;
 
   @NotNull
-  @Column({ type: DataType.TEXT, allowNull: false })
+  @Column({ type: DataType.ENUM(...Object.values(CompanyStatus)), allowNull: false })
   public status: CompanyStatus;
 
   @NotNull
-  @Column({ type: DataType.TEXT, allowNull: false })
+  @Column({ type: DataType.STRING(2048), allowNull: false })
   public logo: string;
-}
-
-export enum CompanyStatus {
-  Open = 'Open',
-  Closed = 'Closed',
 }
 
 export interface ICompany {
@@ -83,4 +89,11 @@ export interface ICompany {
 
 export default Companies;
 
-export const companyTriggers = readFileSync('src/models/Companies/triggers.sql').toString();
+export const check_cif_validity_trigger = [
+  DROP_CHECK_CIF_VALIDITY,
+  CREATE_CHECK_CIF_VALIDITY,
+  DROP_BEFORE_INSERT_CIF_TRIGGER,
+  CREATE_BEFORE_INSERT_CIF_TRIGGER,
+  DROP_BEFORE_UPDATE_CIF_TRIGGER,
+  CREATE_BEFORE_UPDATE_CIF_TRIGGER,
+];

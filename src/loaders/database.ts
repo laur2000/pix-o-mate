@@ -5,11 +5,11 @@ const { MYSQL_HOST, MYSQL_PORT, MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD, MYSQ
 
 export interface InitializeSequelizeOptions {
   models: string[] | ModelCtor[];
-  triggers: string[];
+  commands: string[];
 }
 
 export const initializeSequelize = async (opts: InitializeSequelizeOptions) => {
-  const { models, triggers } = opts;
+  const { models, commands } = opts;
 
   const sequelize = new Sequelize({
     host: MYSQL_HOST,
@@ -26,7 +26,7 @@ export const initializeSequelize = async (opts: InitializeSequelizeOptions) => {
     await sequelize.sync();
 
     // Create or Update triggers
-    Promise.all(triggers.map((x) => sequelize.query(x))).catch(console.error)
+    commands.map(async (x) => await sequelize.query(x));
   }
 
   return sequelize;
